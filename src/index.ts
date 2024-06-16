@@ -1,12 +1,16 @@
 /*
  * @Date: 2024-05-11 21:46:03
- * @Description: 
+ * @Description:
  */
 
-import { createMockServerPlugin } from "./createMockServerPlugin";
+import {Plugin, resolveConfig} from 'vite';
+import {ViteMockOptions} from './types';
+import {createMockServer} from "./createMockServer";
 
-export function createMockServer (opt){
+export const ViteMockServer = (opt: ViteMockOptions): Plugin => {
+    const config = resolveConfig
     return {
-        configureServer:createMockServerPlugin(opt)
-    }
-}
+        name: 'vite:mock',
+        configResolved: createMockServer(opt,config)
+    };
+};

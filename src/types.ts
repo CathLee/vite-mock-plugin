@@ -1,8 +1,13 @@
-export interface ViteMockOptions {
+
+/*
+ * @Date: 2024-06-16 11:18:58
+ * @Description: 
+ */
+export type ViteMockOptions = {
     mockPath?: string
     configPath?: string
-    ignoreFile?: []
-    watchFile?: boolean
+    ignore?: []
+    watchFiles?: boolean
     enable?: boolean
     logger?: boolean
     cors?: boolean
@@ -10,9 +15,18 @@ export interface ViteMockOptions {
 export type MethodType = 'get' | 'post' | 'put' | 'delete' | 'patch';
 
 
-export declare interface MockMethod {
+export type MockMethod ={
     url: string;
     method?: MethodType;
     timeout?: number;
     response: ((opt: { [key: string]: string; body: any; query: any }) => any) | any;
 }
+
+export type CreateMock =  {
+    mockPath?: string;
+    configPath?: string;
+    ignoreFiles?: string[];
+    ignore?: RegExp | ((fileName: string) => boolean);
+    watchFiles?: boolean;
+    localEnabled?: boolean;
+  }

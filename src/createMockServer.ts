@@ -1,15 +1,30 @@
-import {ViteMockOptions} from "./types";
+import {MockMethod, ViteMockOptions} from "./types";
 import type {ResolvedConfig} from 'vite'
 import path from "path";
 import {bundleRequire} from "bundle-require";
 import {isAbsPath} from "./utils";
+import fg from 'fast-glob'
 
 
 const getMockConfig = async (opt: ViteMockOptions, config: ResolvedConfig) => {
     const {absConfigPath, absMockPath} = getPath(opt);
-    console.log(absConfigPath, absMockPath);
     const {ignore, configPath, logger} = opt
-    return await resolveModule(absConfigPath, config);
+    console.log(absMockPath)
+    let returnData: MockMethod[] = []
+    if (configPath) {
+        returnData = await resolveModule(absConfigPath, config);
+        return returnData
+    }
+    const mockFiles = fg.sync('**/*.{ts}', {
+        cwd: absMockPath,
+    })
+
+    mockFiles.forEach(async (file) => {
+        const absFilePath = path.resolve(absMockPath!, file)
+        const res = await resolveModule(absFilePath, config);
+        returnData.push(res)
+    })
+    return returnData
 }
 
 const resolveModule = async (absConfigPath: string, config: ResolvedConfig) => {
@@ -19,10 +34,10 @@ const resolveModule = async (absConfigPath: string, config: ResolvedConfig) => {
     * it could also be a .mjs or even be written in TypeScript
     *  when we use plugins in vite to compile the file
     * */
-    const mockData = await bundleRequire(
+    const res = await bundleRequire(
         {filepath: absConfigPath}
     )
-    return mockData.mod
+    return res.mod.default||res.mod
 }
 
 const getPath = (opt: ViteMockOptions) => {
@@ -33,19 +48,39 @@ const getPath = (opt: ViteMockOptions) => {
     return {absConfigPath, absMockPath};
 }
 
+export let mockData: MockMethod[] = []
+
+/**
+ * @description 遍历mock文件创建mock服务
+ * @param opt 配置的mock文件路径
+ * @param config vite内部环境配置
+ */
 export const createMockServer = async (
-    opt: ViteMockOptions = {mockPath: 'mock', configPath: 'vite.mock.config'},
+    opt: ViteMockOptions = {mockPath: 'mock'},
     config: ResolvedConfig,
 ) => {
     opt = {
         mockPath: 'mock',
         watchFiles: true,
-        configPath: 'vite.mock.config.ts',
         logger: true,
         ...opt
     }
-    const mockData = await getMockConfig(opt, config)
-    console.log("当前路径：", mockData);
+    mockData = await getMockConfig(opt, config)
+}
 
-
+export const requestMiddleware = (opt: ViteMockOptions) => {
+    const middleware = async (req: any, res: any, next: any) => {
+        const {url, method} = req
+        const matched = mockData.find((item) => {
+            return item.url === url && item.method === method
+        })
+        if (matched) {
+            const {response} = matched
+            const resData = await response(req)
+            res.end(JSON.stringify(resData))
+        } else {
+            next()
+        }
+    }
+    return middleware
 }

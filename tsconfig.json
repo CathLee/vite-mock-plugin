@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es6",            // 编译后的JavaScript目标版本
+    "module": "commonjs",       // 生成的模块系统
+    "strict": true,             // 启用所有严格类型检查选项
+    "esModuleInterop": true,    // 允许导入非ES模块
+    "outDir": "./dist",         // 输出目录
+    "sourceMap": true           // 生成源代码映射文件
+  },
+  "include": [
+    "**/*"                 // 包括的文件路径
+  ],
+  "exclude": [
+    "node_modules",            // 排除的文件路径
+    "**/*.spec.ts",
+    "playground.ts"
+  ]
+}

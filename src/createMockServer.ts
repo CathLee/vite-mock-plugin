@@ -15,15 +15,19 @@ const getMockConfig = async (opt: ViteMockOptions, config: ResolvedConfig) => {
         returnData = await resolveModule(absConfigPath, config);
         return returnData
     }
-    const mockFiles = fg.sync('**/*.{ts}', {
+    const mockFiles = fg.sync('**/*.ts', {
         cwd: absMockPath,
-    })
+    });
 
+    console.log('mockFiles', mockFiles);
+    
     mockFiles.forEach(async (file) => {
         const absFilePath = path.resolve(absMockPath!, file)
         const res = await resolveModule(absFilePath, config);
         returnData.push(res)
+        console.log('returnData', returnData);
     })
+    
     return returnData
 }
 
@@ -37,6 +41,9 @@ const resolveModule = async (absConfigPath: string, config: ResolvedConfig) => {
     const res = await bundleRequire(
         {filepath: absConfigPath}
     )
+    console.log('res.mod。default', res.mod.default);
+    console.log('res.mode', res.mod.mod);
+    
     return res.mod.default||res.mod
 }
 
@@ -66,6 +73,8 @@ export const createMockServer = async (
         ...opt
     }
     mockData = await getMockConfig(opt, config)
+    console.log('mockData', mockData);
+    
 }
 
 export const requestMiddleware = (opt: ViteMockOptions) => {

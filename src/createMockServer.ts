@@ -79,13 +79,26 @@ export const createMockServer = async (
 
 export const requestMiddleware = (opt: ViteMockOptions) => {
     const middleware = async (req: any, res: any, next: any) => {
-        const {url, method} = req
+        const {url='/api/user', method='GET'} = req
+        console.log(mockData);
+        
         const matched = mockData.find((item) => {
+            console.log('item', item.url, item.method);
+                        console.log('url', url, method);
+                        
             return item.url === url && item.method === method
         })
+        console.log('matched', matched);
+        
+        
+       
+        
         if (matched) {
+            console.log('matched', matched);
             const {response} = matched
             const resData = await response(req)
+            console.log('resData', resData);
+            
             res.end(JSON.stringify(resData))
         } else {
             next()

@@ -73,14 +73,14 @@ export const createMockServer = async (
         ...opt
     }
     mockData = await getMockConfig(opt, config)
-    console.log('mockData', mockData);
     
 }
 
 export const requestMiddleware = (opt: ViteMockOptions) => {
     const middleware = async (req: any, res: any, next: any) => {
-        const {url='/api/user', method='GET'} = req
-        console.log(mockData);
+        const {url, method='GET'} = req
+        
+        console.log('current url:',url);
         
         const matched = mockData.find((item) => {
             console.log('item', item.url, item.method);
@@ -88,13 +88,12 @@ export const requestMiddleware = (opt: ViteMockOptions) => {
                         
             return item.url === url && item.method === method
         })
-        console.log('matched', matched);
         
         
        
         
         if (matched) {
-            console.log('matched', matched);
+            console.log('matched is:', matched);
             const {response} = matched
             const resData = await response(req)
             console.log('resData', resData);

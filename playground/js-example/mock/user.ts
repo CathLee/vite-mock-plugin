@@ -10,7 +10,7 @@ export default {
         return {
             code: 0,
             data: {
-                name: 'vben',
+                name: 'yosiki',
                 age: 18,
             },
         };

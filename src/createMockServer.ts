@@ -4,7 +4,7 @@ import path from "path";
 import {bundleRequire} from "bundle-require";
 import {isAbsPath} from "./utils";
 import fg from 'fast-glob'
-
+import chockidar from 'chokidar'
 
 const getMockConfig = async (opt: ViteMockOptions, config: ResolvedConfig) => {
     const {absConfigPath, absMockPath} = getPath(opt);
@@ -73,6 +73,7 @@ export const createMockServer = async (
         ...opt
     }
     mockData = await getMockConfig(opt, config)
+    createWatch(opt,config)
     console.log('mockData', mockData);
     
 }
@@ -105,4 +106,25 @@ export const requestMiddleware = (opt: ViteMockOptions) => {
         }
     }
     return middleware
+}
+// watch mock file
+const createWatch = (opt:ViteMockOptions,config: ResolvedConfig)=>{
+    const {absConfigPath, absMockPath} = getPath(opt);
+   const watchDir = [absMockPath!]
+   const watcher = chockidar.watch(watchDir, {
+       ignoreInitial: true
+   })
+   /**
+    * use chokidar to watch file change
+    * because nodejs fs.watch has some bugs in some platform(eg: macos/centos)
+    */
+   watcher.on('all', async (event, path) => {
+    console.log('event:', event);
+    console.log('path:', path);
+    
+         if (event === 'add' || event === 'change') {
+              mockData = await getMockConfig(opt, config)
+         }
+    }
+    )
 }

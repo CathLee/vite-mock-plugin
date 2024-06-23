@@ -5,9 +5,7 @@ import HelloWorld from './components/HelloWorld.vue'
 onMounted(() => {
   console.log('App.vue mounted')
   axios.get('/api/user')
-    .then(data => console.log(data))
-  axios.get('/api/idols')
-    .then(data => console.log(data))
+  .then(data => console.log(data))
 })
 </script>
 

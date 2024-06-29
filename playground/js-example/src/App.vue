@@ -1,11 +1,16 @@
+<!--
+ * @Date: 2024-06-24 20:23:37
+ * @Description: 
+-->
 <script setup>
 import { onMounted } from 'vue';
 import axios from 'axios';
 import HelloWorld from './components/HelloWorld.vue'
 onMounted(() => {
-  console.log('App.vue mounted')
-  axios.get('/api/user')
-  .then(data => console.log(data))
+  axios.post('/api/user')
+    .then(({ data }) => console.log(data))
+  axios.get('/api/idols')
+    .then(({ data }) => console.log(data))
 })
 </script>
 

@@ -1,12 +1,13 @@
+/*
+ * @Date: 2024-06-23 11:05:50
+ * @Description: 
+ */
 export default () => {
     return [
         {
             url: "/api/createUser",
             method: "post",
-            response: ({body, query}) => {
-                console.log("body>>>>>>>>", body);
-                console.log("query>>>>>>>>", query);
-
+            response: () => {
                 return {
                     code: 0,
                     message: "ok",

@@ -7,7 +7,6 @@ export default [
             return {
                 code: 1,
                 message: 'ok',
-                message: 'ok',
                 data: null,
             }
         },

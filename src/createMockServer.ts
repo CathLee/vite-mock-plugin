@@ -1,6 +1,7 @@
 import { MockMethod, ViteMockOptions } from "./types";
 import type { ResolvedConfig } from "vite";
 import path from "path";
+import * as urlParser from "url";
 import { bundleRequire, JS_EXT_RE } from "bundle-require";
 import { isAbsPath } from "./utils";
 import fg from "fast-glob";
@@ -85,27 +86,29 @@ export const createMockServer = async (
   createWatch(opt, config);
 };
 
+// 对get的请求进行接口匹配
 export const requestMiddleware = (opt: ViteMockOptions) => {
-  const middleware = async (
-    req: {
-      url?: string;
-      method?: string;
-    },
-    res: {
-      end: (arg0: string) => void;
-    },
-    next: {
-      (): void;
-    }
-  ) => {
+  const middleware = async (req: any, res: any, next: any) => {
     const { url, method } = req;
-
+    const queryParams = urlParser.parse(url, true);
+    const {pathname:reqUrl,query} = queryParams;
+    if (!reqUrl?.startsWith("/api/")) {
+      return;
+    }
     const matched = mockData.find((item) => {
-      return item.url === url && item.method === method;
+      return item.url === reqUrl && item.method === method;
     });
 
     if (matched) {
-      const { response } = matched;
+    const isGet = method.toUpperCase() === "GET";
+      const { response,rawResponse,timeout,statusCode,url } = matched;
+      if (timeout) {
+        // await sleep(timeout)
+      }
+      if(reqUrl){
+        if((isGet && JSON.stringify(query) === '{}') || !isGet){
+          req.query = query;
+      }
       const resData = await response(req);
 
       res.end(JSON.stringify(resData));

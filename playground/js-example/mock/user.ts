@@ -3,13 +3,13 @@
  * @Description:
  */
 export default {
-  url: "/api/user",
-  method: "POST",
+  url: '/api/user',
+  method: 'POST',
   response: () => {
     return {
       code: 1,
-      message: "eeee",
+      message: 'eeee',
       data: null,
-    };
+    }
   },
-};
+}

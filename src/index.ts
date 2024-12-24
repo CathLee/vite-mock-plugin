@@ -3,23 +3,23 @@
  * @Description:
  */
 
-import {Plugin, resolveConfig, ResolvedConfig} from 'vite';
-import {ViteMockOptions} from './types';
-import {createMockServer, requestMiddleware} from "./createMockServer";
+import type { Plugin, ResolvedConfig } from 'vite'
+import type { ViteMockOptions } from './types'
+import { createMockServer, requestMiddleware } from './createMockServer'
 
-export const ViteMockServer = (opt: ViteMockOptions): Plugin => {
-    let config: ResolvedConfig;
-    
-    return {
-        name: 'vite:mock',
-        configResolved(resolvedConfig) {
-            config = resolvedConfig;
-            createMockServer(opt, config);
-        },
-        configureServer: async ({middlewares}) => {
-            const middleware = await requestMiddleware(opt);
+export function ViteMockServer(opt: ViteMockOptions): Plugin {
+  let config: ResolvedConfig
 
-            middlewares.use(middleware);
-        }
-    };
-};
+  return {
+    name: 'vite:mock',
+    configResolved(resolvedConfig: ResolvedConfig) {
+      config = resolvedConfig
+      createMockServer(opt, config)
+    },
+    configureServer: async ({ middlewares }: { middlewares: any }) => {
+      const middleware = await requestMiddleware(opt)
+
+      middlewares.use(middleware)
+    },
+  }
+}

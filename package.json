@@ -2,27 +2,29 @@
   "name": "vite-mock-plugin",
   "version": "1.0.0",
   "description": "",
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/koa-bodyparser": "^4.3.12",
-    "@typescript-eslint/eslint-plugin": "^7.13.0",
-    "@typescript-eslint/parser": "^7.13.0",
-    "axios": "^0.24.0",
-    "globals": "^15.4.0",
-    "husky": "^9.0.11",
-    "mockjs": "^1.1.0",
-    "vite": "^5.2.11"
   },
   "dependencies": {
     "bundle-require": "^5.0.0",
     "chokidar": "^3.6.0",
     "eslint": "^8.46.0",
     "koa-bodyparser": "^4.4.1"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^3.12.1",
+    "@types/koa-bodyparser": "^4.3.12",
+    "@typescript-eslint/eslint-plugin": "^7.13.0",
+    "@typescript-eslint/parser": "^7.13.0",
+    "axios": "^0.24.0",
+    "eslint": "^9.17.0",
+    "globals": "^15.4.0",
+    "husky": "^9.0.11",
+    "mockjs": "^1.1.0",
+    "vite": "^5.2.11"
   }
 }

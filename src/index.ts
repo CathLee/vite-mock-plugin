@@ -18,8 +18,7 @@ export const ViteMockServer = (opt: ViteMockOptions): Plugin => {
         },
         configureServer: async ({middlewares}) => {
             const middleware = await requestMiddleware(opt);
-            console.log(middleware);
-            
+
             middlewares.use(middleware);
         }
     };

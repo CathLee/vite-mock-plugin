@@ -107,7 +107,6 @@ export const createMockServer = async (
 // 对get的请求进行接口匹配
 export const requestMiddleware = async (opt: ViteMockOptions) => {
     const middleware = async (req: any, res: any, next: any) => {
-        console.log(req);
         const {url, method} = req;
         const queryParams = urlParser.parse(url, true);
         const {pathname: reqUrl, query} = queryParams;
